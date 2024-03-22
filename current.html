@@ -89,17 +89,6 @@
 
 
    <script type="text/javascript">
-      var sss;
-
-      var data1 = [];
-      var selected = {}; // 创建一个空对象来存储所需的字典
-
-      for (var i = 0; i < sss.length; i++) {
-         var obj = sss[i];
-         data1.push(obj.name);
-         selected[obj.name] = false;
-      }
-
       var dom = document.getElementById('container');
       var myChart = echarts.init(dom, null, {
          renderer: 'canvas',
@@ -109,50 +98,82 @@
 
       var option;
 
+      function randomData() {
+         now = new Date(+now + oneDay);
+         value = value + Math.random() * 21 - 10;
+         return {
+            name: now.toString(),
+            value: [
+               [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+               Math.round(value)
+            ]
+         };
+      }
+      let data = [];
+      let now = new Date(1997, 9, 3);
+      let oneDay = 24 * 3600 * 1000;
+      let value = Math.random() * 1000;
+      for (var i = 0; i < 1000; i++) {
+         data.push(randomData());
+      }
       option = {
          title: {
-            text: '台体1.5A/H/1.0/4圈'
+            text: 'Dynamic Data & Time Axis'
          },
          tooltip: {
-            trigger: 'axis'
-         },
-         legend: {
-            data: data1,
-            selected: selected
-         },
-         grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-         },
-         toolbox: {
-            feature: {
-               saveAsImage: {}
+            trigger: 'axis',
+            formatter: function (params) {
+               params = params[0];
+               var date = new Date(params.name);
+               return (
+                  date.getDate() +
+                  '/' +
+                  (date.getMonth() + 1) +
+                  '/' +
+                  date.getFullYear() +
+                  ' : ' +
+                  params.value[1]
+               );
+            },
+            axisPointer: {
+               animation: false
             }
          },
          xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: data2
+            type: 'time',
+            splitLine: {
+               show: false
+            }
          },
          yAxis: {
-            type: 'value'
-         },
-         dataZoom: [
-            {
-               type: 'inside',
-               start: 0,
-               end: 70
-            },
-            {
-               start: 0,
-               end: 10
+            type: 'value',
+            boundaryGap: [0, '100%'],
+            splitLine: {
+               show: false
             }
-         ],
-         series: sss
+         },
+         series: [
+            {
+               name: 'Fake Data',
+               type: 'line',
+               showSymbol: false,
+               data: data
+            }
+         ]
       };
-
+      setInterval(function () {
+         for (var i = 0; i < 5; i++) {
+            data.shift();
+            data.push(randomData());
+         }
+         myChart.setOption({
+            series: [
+               {
+                  data: data
+               }
+            ]
+         });
+      }, 1000);
 
       if (option && typeof option === 'object') {
          myChart.setOption(option);
