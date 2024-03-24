@@ -7,7 +7,6 @@
    <title>Document</title>
    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
    <script type="text/javascript" src="https://registry.npmmirror.com/echarts/5.3.1/files/dist/echarts.min.js"></script>
-   <script src="data.js"></script>
 </head>
 
 <body>
@@ -62,7 +61,7 @@
       </div>
    </aside>
 
-   <div class="relative h-screen sm:ml-64 rounded-lg  p-4 border-2 border-gray-200 border-dashed">
+   <div class="relative h-screen sm:ml-64 rounded-lg border-2 border-gray-200 border-dashed">
 
       <div class="grid grid-cols-3 gap-4 mb-4">
          <div class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
@@ -82,7 +81,7 @@
          </div>
       </div>
 
-      <div class=" mb-4  bg-gray-50  h-96 flow-root px-2 absolute bottom-0 w-full ">
+      <div class=" mb-4  bg-gray-50  flow-root px-2 absolute bottom-0 w-full " style="height: 32rem;">
          <div id="container" class="h-full" />
       </div>
    </div>
@@ -113,7 +112,7 @@
       let now = new Date(1997, 9, 3);
       let oneDay = 24 * 3600 * 1000;
       let value = Math.random() * 1000;
-      for (var i = 0; i < 1000; i++) {
+      for (var i = 0; i < 200; i++) {
          data.push(randomData());
       }
       option = {
@@ -161,11 +160,37 @@
             }
          ]
       };
-      setInterval(function () {
-         for (var i = 0; i < 5; i++) {
-            data.shift();
-            data.push(randomData());
-         }
+      // setInterval(function () {
+      //    for (var i = 0; i < 5; i++) {
+      //       data.shift();
+      //       data.push(randomData());
+      //    }
+
+      //    myChart.setOption({
+      //       series: [
+      //          {
+      //             data: data
+      //          }
+      //       ]
+      //    });
+      // }, 1000);
+
+      if (option && typeof option === 'object') {
+         myChart.setOption(option);
+      }
+
+      //
+      let socket = new WebSocket("ws://127.0.0.1:2012");
+
+      socket.onopen = function (e) {
+         console.log("[open] Connection established");
+         console.log("Sending to server");
+         socket.send("My name is John");
+      };
+
+      socket.onmessage = function (event) {
+         console.log(`[message] Data received from server: ${event.data}`);
+         data.push(randomData());
          myChart.setOption({
             series: [
                {
@@ -173,11 +198,23 @@
                }
             ]
          });
-      }, 1000);
+      };
 
-      if (option && typeof option === 'object') {
-         myChart.setOption(option);
-      }
+      socket.onclose = function (event) {
+         if (event.wasClean) {
+            console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+         } else {
+            // 例如服务器进程被杀死或网络中断
+            // 在这种情况下，event.code 通常为 1006
+            console.log('[close] Connection died');
+         }
+      };
+
+      socket.onerror = function (error) {
+         console.log(`[error] ${error.message}`);
+      };
+
+      //
 
       window.addEventListener('resize', myChart.resize);
    </script>
