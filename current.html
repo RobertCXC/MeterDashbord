@@ -85,7 +85,7 @@
          <div id="container" class="h-full" />
       </div>
    </div>
-
+   https://blog.csdn.net/weixin_42266130/article/details/108235509
 
    <script type="text/javascript">
       var dom = document.getElementById('container');
@@ -93,53 +93,22 @@
          renderer: 'canvas',
          useDirtyRect: false
       });
-      var app = {};
 
       var option;
+      var dataX
+      var dataY1 = [];
+      var dataY2 = [];
 
-      function randomData() {
-         now = new Date(+now + oneDay);
-         value = value + Math.random() * 21 - 10;
-         return {
-            name: now.toString(),
-            value: [
-               [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
-               Math.round(value)
-            ]
-         };
-      }
-      let data = [];
-      let now = new Date(1997, 9, 3);
-      let oneDay = 24 * 3600 * 1000;
-      let value = Math.random() * 1000;
-      for (var i = 0; i < 200; i++) {
-         data.push(randomData());
-      }
       option = {
          title: {
-            text: 'Dynamic Data & Time Axis'
+            text: '实时数据'
          },
          tooltip: {
             trigger: 'axis',
-            formatter: function (params) {
-               params = params[0];
-               var date = new Date(params.name);
-               return (
-                  date.getDate() +
-                  '/' +
-                  (date.getMonth() + 1) +
-                  '/' +
-                  date.getFullYear() +
-                  ' : ' +
-                  params.value[1]
-               );
-            },
-            axisPointer: {
-               animation: false
-            }
          },
          xAxis: {
-            type: 'time',
+            type: 'category',
+            data: dataX,
             splitLine: {
                show: false
             }
@@ -153,48 +122,57 @@
          },
          series: [
             {
-               name: 'Fake Data',
+               name: '台体1',
                type: 'line',
                showSymbol: false,
                data: data
+            },
+            {
+               name: '台体2',
+               type: 'line',
+               showSymbol: false,
+               data: data1
             }
          ]
       };
-      // setInterval(function () {
-      //    for (var i = 0; i < 5; i++) {
-      //       data.shift();
-      //       data.push(randomData());
-      //    }
 
-      //    myChart.setOption({
-      //       series: [
-      //          {
-      //             data: data
-      //          }
-      //       ]
-      //    });
-      // }, 1000);
 
       if (option && typeof option === 'object') {
          myChart.setOption(option);
       }
 
-      //
+      //关于websocket
       let socket = new WebSocket("ws://127.0.0.1:2012");
 
       socket.onopen = function (e) {
-         console.log("[open] Connection established");
-         console.log("Sending to server");
-         socket.send("My name is John");
+         console.log("websocket初始化成功");
+         //socket.send("My name is John");
       };
 
       socket.onmessage = function (event) {
-         console.log(`[message] Data received from server: ${event.data}`);
-         data.push(randomData());
+         console.log("收到数据", event.data);
+         var temp = event.data.split(',');
+         data.push({
+            name: temp[0],
+            value: [
+               temp[0],
+               temp[1]
+            ]
+         });
+
+         data1.push({
+            name: temp[0],
+            value: [
+               temp[0],
+               temp[1]
+            ]
+         });
+
          myChart.setOption({
             series: [
                {
-                  data: data
+                  data: data,
+                  data1: data1
                }
             ]
          });
@@ -214,9 +192,9 @@
          console.log(`[error] ${error.message}`);
       };
 
-      //
 
       window.addEventListener('resize', myChart.resize);
+
    </script>
 </body>
 
