@@ -5,8 +5,8 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Document</title>
-   <link href="./flowbite.min.css" rel="stylesheet" />
-   <script type="text/javascript" src="./echarts.min.js"></script>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+   <script type="text/javascript" src="https://registry.npmmirror.com/echarts/5.3.1/files/dist/echarts.min.js"></script>
 </head>
 
 <body>
@@ -85,10 +85,9 @@
          <div id="container" class="h-full" />
       </div>
    </div>
-
+   https://blog.csdn.net/weixin_42266130/article/details/108235509
 
    <script type="text/javascript">
-      //绑定
       var dom = document.getElementById('container');
       var myChart = echarts.init(dom, null, {
          renderer: 'canvas',
@@ -96,16 +95,13 @@
       });
 
       var option;
-      var dataX = []
+      var dataX
       var dataY1 = [];
       var dataY2 = [];
 
       option = {
          title: {
             text: '实时数据'
-         },
-         legend: {
-            selected: { "台体1": true, "台体2": true }
          },
          tooltip: {
             trigger: 'axis',
@@ -123,23 +119,19 @@
             splitLine: {
                show: false
             }
-         }, toolbox: {
-            feature: {
-               saveAsImage: {}
-            }
          },
          series: [
             {
                name: '台体1',
                type: 'line',
                showSymbol: false,
-               data: dataY1
+               data: data
             },
             {
                name: '台体2',
                type: 'line',
                showSymbol: false,
-               data: dataY2
+               data: data1
             }
          ]
       };
@@ -149,25 +141,18 @@
          myChart.setOption(option);
       }
 
-      //关于websocket部分
+      //关于websocket
       let socket = new WebSocket("ws://127.0.0.1:2012");
 
       socket.onopen = function (e) {
          console.log("websocket初始化成功");
+         //socket.send("My name is John");
       };
 
       socket.onmessage = function (event) {
-
          console.log("收到数据", event.data);
          var temp = event.data.split(',');
-         if (dataX.length > 200) {
-            dataX.shift();
-            dataY1.shift();
-            dataY2.shift();
-         }
-
-         dataX.push(temp[0]);
-         dataY1.push({
+         data.push({
             name: temp[0],
             value: [
                temp[0],
@@ -175,24 +160,19 @@
             ]
          });
 
-         dataY2.push({
+         data1.push({
             name: temp[0],
             value: [
                temp[0],
-               temp[2]
+               temp[1]
             ]
          });
 
          myChart.setOption({
-            xAxis: {
-               data: dataX,
-            },
             series: [
                {
-                  data: dataY1
-               },
-               {
-                  data: dataY2
+                  data: data,
+                  data1: data1
                }
             ]
          });
