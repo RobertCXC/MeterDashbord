@@ -66,17 +66,12 @@ ajaxGet('http://127.0.0.1:4070/allCurrentPlans', function (error, response) {
   if (error) {
     console.error(error);
   } else {
-    console.log(response);
     // 获取 <ul> 元素
     const radioList = document.getElementById('radioList');
 
 
     // 示例数据
     const data = response;
-    console.log(data);
-    for (var i = 0; i < data.length; i++) {
-      console.log(data[i]);
-    }
 
     // 生成 HTML 字符串
     const html = data.map(item => `
@@ -88,9 +83,9 @@ ajaxGet('http://127.0.0.1:4070/allCurrentPlans', function (error, response) {
           class="w-full py-3 ms-2 text-sm font-medium text-gray-900">${item.PInfo}
        </label>
     </div>
- </li>
-`).join('');
-    console.log(html);
+    </li>
+    `).join('');
+    
     radioList.innerHTML = html;
   }
 });
