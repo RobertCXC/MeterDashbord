@@ -13,13 +13,3 @@ function ajaxGet(url, callback) {
     xhr.open('GET', url, true);
     xhr.send();
 }
-
-// 使用封装的ajaxGet函数
-// ajaxGet('your_json_data_endpoint_here', function (error, response) {
-//     if (error) {
-//         console.error(error);
-//     } else {
-//         //   document.getElementById("output").innerHTML = "<pre>" + JSON.stringify(response, null, 2) + "</pre>";
-//         console.log(response);
-//     }
-// });
