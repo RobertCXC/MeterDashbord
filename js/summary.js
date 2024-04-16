@@ -1,5 +1,4 @@
 //初始化echarts
-console.log(666666);
 var dom = document.getElementById('container');
 var myChart = echarts.init(dom, null, {
   renderer: 'canvas',
