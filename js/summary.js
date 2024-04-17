@@ -83,7 +83,7 @@ function GetSerials() {
   console.log(url);
   
   //请求
-  ajaxGet('http://127.0.0.1:4070/timeinterval'+url, function (error, response) {
+  ajaxGet('http://'+globalUrl+'/timeinterval'+url, function (error, response) {
     if (error) {
       console.error(error);
     } else {
@@ -100,7 +100,7 @@ function GetSerials() {
 }
 //获取所有的点位的
 
-ajaxGet('http://127.0.0.1:4070/plans', function (error, response) {
+ajaxGet('http://'+globalUrl+'/plans', function (error, response) {
   if (error) {
     console.error(error);
   } else {

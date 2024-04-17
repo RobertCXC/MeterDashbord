@@ -60,7 +60,7 @@ if (option && typeof option === 'object') {
 }
 
 //关于websocket部分
-let socket = new WebSocket("ws://127.0.0.1:4060");
+let socket = new WebSocket("ws://"+globalUrl+":81");
 
 socket.onopen = function (e) {
    console.log("websocket初始化成功");

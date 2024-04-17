@@ -1,4 +1,4 @@
-ajaxGet('http://127.0.0.1:4070/plans', function (error, response) {
+ajaxGet('http://'+globalUrl+'/plans', function (error, response) {
     if (error) {
         console.error(error);
     } else {
@@ -44,7 +44,7 @@ function GetSerials() {
     console.log(url);
 
     //请求
-    ajaxGet('http://127.0.0.1:4070/day' + url, function (error, response) {
+    ajaxGet('http://'+globalUrl+'/day' + url, function (error, response) {
         if (error) {
             console.error(error);
         } else {
