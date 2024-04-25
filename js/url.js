@@ -1,1 +1,2 @@
-var globalUrl='127.0.0.1';
+var qdaeglobalUrl='172.16.23.167';
+var globalUrl='172.16.23.137';

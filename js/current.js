@@ -60,7 +60,7 @@ if (option && typeof option === 'object') {
 }
 
 //关于websocket部分
-let socket = new WebSocket("ws://"+globalUrl+":81");
+let socket = new WebSocket("ws://" + globalUrl + ":82");
 
 socket.onopen = function (e) {
    console.log("websocket初始化成功");
@@ -69,43 +69,48 @@ socket.onopen = function (e) {
 socket.onmessage = function (event) {
 
    console.log("收到数据", event.data);
-   var temp = event.data.split(',');
-   if (dataX.length > 200) {
-      dataX.shift();
-      dataY1.shift();
-      dataY2.shift();
+   if (event.data.startsWith("PlanChange")) {
+      console.log("切换方案");
    }
+   else {
+      var temp = event.data.split(',');
+      if (dataX.length > 200) {
+         dataX.shift();
+         dataY1.shift();
+         dataY2.shift();
+      }
 
-   dataX.push(temp[0]);
-   dataY1.push({
-      name: temp[0],
-      value: [
-         temp[0],
-         temp[1]
-      ]
-   });
+      dataX.push(temp[0]);
+      dataY1.push({
+         name: temp[0],
+         value: [
+            temp[0],
+            temp[1]
+         ]
+      });
 
-   dataY2.push({
-      name: temp[0],
-      value: [
-         temp[0],
-         temp[2]
-      ]
-   });
+      dataY2.push({
+         name: temp[0],
+         value: [
+            temp[0],
+            temp[2]
+         ]
+      });
 
-   myChart.setOption({
-      xAxis: {
-         data: dataX,
-      },
-      series: [
-         {
-            data: dataY1
+      myChart.setOption({
+         xAxis: {
+            data: dataX,
          },
-         {
-            data: dataY2
-         }
-      ]
-   });
+         series: [
+            {
+               data: dataY1
+            },
+            {
+               data: dataY2
+            }
+         ]
+      });
+   }
 };
 
 socket.onclose = function (event) {

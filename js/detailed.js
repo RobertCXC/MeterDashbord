@@ -1,4 +1,4 @@
-ajaxGet('http://'+globalUrl+'/plans', function (error, response) {
+ajaxGet('http://' + globalUrl + '/plans', function (error, response) {
     if (error) {
         console.error(error);
     } else {
@@ -40,16 +40,16 @@ function GetSerials() {
     } else {
         console.log('没有选中的项');
     }
-    var url = "?id=" + id + "&date=" + inputDateStart ;
+    var url = "?id=" + id + "&date=" + inputDateStart;
     console.log(url);
 
     //请求
-    ajaxGet('http://'+globalUrl+'/day' + url, function (error, response) {
+    ajaxGet('http://' + globalUrl + ':80/day' + url, function (error, response) {
         if (error) {
             console.error(error);
         } else {
             console.log(response)
-
+            console.log('http://' + globalUrl + ':80/day' + url)
             myChart.setOption({
                 series: response.mySeries,
                 xAxis: {
@@ -81,7 +81,7 @@ var option = {
     },
     legend: {
         data: ["表1", "表2"],
-        selected: { "表1": true, "表2": true}//默认不勾选
+        selected: { "表1": true, "表2": true }//默认不勾选
     },
     grid: {
         left: '3%',

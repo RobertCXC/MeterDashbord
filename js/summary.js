@@ -102,6 +102,7 @@ function GetSerials() {
 
 ajaxGet('http://'+globalUrl+'/plans', function (error, response) {
   if (error) {
+    console.log('http://'+globalUrl+'/plans');
     console.error(error);
   } else {
     // 获取 <ul> 元素
